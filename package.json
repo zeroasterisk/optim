@@ -1,11 +1,11 @@
 {
-  "name": "optim",
+  "name": "imagemin-on-aww-lambda",
   "version": "1.0.0",
-  "description": "Automatically optimise images on S3 using AWS Lambda",
+  "description": "Optimize images with imagemin on S3 using AWS Lambda",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/gosquared/optim.git"
+    "url": "git@github.com:zeroasterisk/optim.git"
   },
   "license": "MIT",
   "author": "JT <jt@gosquared.com>",
@@ -13,11 +13,13 @@
     "deploy": "node-lambda deploy"
   },
   "dependencies": {
-    "async": "^1.5.0",
-    "imagemin": "^3.2.0",
-    "imagemin-optipng": "^4.3.0"
+    "async": "^2.1.5",
+    "imagemin": "^5.2.2",
+    "imagemin-mozjpeg": "^6.0.0",
+    "imagemin-optipng": "^5.2.1",
+    "imagemin-pngquant": "^5.0.0"
   },
   "devDependencies": {
-    "node-lambda": "^0.7.1"
+    "node-lambda": "^0.8.13"
   }
 }

@@ -1,9 +1,17 @@
 # Optim
 
-Automagitically optimize your images on S3 with the magic of AWS Lambda.
+Automatically optimize your images on S3 with the magic of AWS Lambda.
 
-Optim is a super-simple [Lambda][l] function that can listen to an S3 bucket for uploads, and runs everything it can through [imagemin][imagemin].
+`imagemin-on-aws-lambda` is a fork of [Optim][optim].
 
+It is a super-simple [Lambda][l] function that can listen to an S3 bucket for uploads, and runs everything it can through [imagemin][imagemin].
+
+Currently supported:
+* PNG
+* GIF
+* JPG
+* SVG
+* WEBP
 
 ## Setup
 
@@ -48,9 +56,35 @@ In `runtime.env`:
 
  * `UPLOAD_ACL`: finalised images will be uploaded with this permission level. Should be one of `private` `public-read` `public-read-write` `aws-exec-read` `authenticated-read` `bucket-owner-read` `bucket-owner-full-control`. Default is `public-read`.
  * `MAX_FILE_SIZE`: files over this size in bytes will be skipped (e.g. big PNGs will probably just hit the timeout anyway). Set to `-1` for no limit
- * `PNG_OPTIM_LEVEL`: Optimization level to use for PNGs, between 0 and 7. Lower level means faster optimization, higher means better results.
+
+## Triggers
+
+The script expects an s3 trigger.
+You can invoke this directly and send in your own trigger event/data if you
+make it look like this:
+
+    {
+      "Records": [ {
+        "s3": {
+          "object": {
+            "key": "somefolder/somefile.png"
+          },
+          "bucket": {
+            "name": "c.eltoro.com"
+          }
+        }
+      } ]
+    }
+
+## Acknowledgements
+
+Big credit goes to [Optim][optim] the original project, which is 80% of the code.
+
+Also, bigger credit to the [imagemin][imagemin] project which does the heavy lifting.
 
 
+
+[optim]: https://github.com/gosquared/optim
 [l]: https://aws.amazon.com/lambda/
 [imagemin]: https://github.com/imagemin/imagemin
 [s3-evt-setup]: http://docs.aws.amazon.com/AmazonS3/latest/UG/SettingBucketNotifications.html
