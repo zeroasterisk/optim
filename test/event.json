@@ -1,0 +1,20 @@
+{
+  "Records": [
+    {
+      "eventVersion": "2.0",
+      "eventTime": "1970-01-01T00:00:00.000Z",
+      "requestParameters": {
+        "sourceIPAddress": "127.0.0.1"
+      },
+      "s3": {
+        "object": {
+          "key": "v/s/vsqk4GtdX9ixh6XNi/vsqk4GtdX9ixh6XNi-test%20ad%20wrong%20size_300x250._source.jpg"
+        },
+        "bucket": {
+          "name": "c.eltoro.com"
+        }
+      },
+      "eventSource": "aws:s3"
+    }
+  ]
+}
