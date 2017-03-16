@@ -76,6 +76,16 @@ make it look like this:
       } ]
     }
 
+
+## Building on OSX or Windows?
+
+AWS lambda runs on linux.
+Sometimes packages rely on binaries which have to be for the runtime.
+There are other ways to accomplish this, but here is one of the easiest.
+
+    rm -rf node_modules
+    docker run -v "${PWD}:/var/task" lambci/lambda:build npm i && npm run deploy
+
 ## Acknowledgements
 
 Big credit goes to [Optim][optim] the original project, which is 80% of the code.
