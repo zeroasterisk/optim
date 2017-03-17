@@ -71,7 +71,7 @@ export const uploadMinifiedFile = (params, head, obj, buf, cb) => {
   const sizeTrimmedPercent = Math.round(1000 * ((sizeInit - sizeEnd) / sizeInit)) / 10;
 
   // modify metadata (from initial head request)
-  head.Metadata.sizeTrimmedPercent = sizeTrimmedPercent;
+  head.Metadata.sizeTrimmedPercent = String(sizeTrimmedPercent);
   head.Metadata.optimized = 'yes';
 
   s3.putObject({
