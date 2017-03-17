@@ -78,7 +78,9 @@ Sometimes packages rely on binaries which have to be for the runtime.
 There are other ways to accomplish this, but here is one of the easiest.
 
     rm -rf node_modules
-    docker run -v "${PWD}:/var/task" lambci/lambda:build npm i && npm run deploy
+    docker run -v "${PWD}:/var/task" "/Users/<name>/.aws:/root/.aws" lambci/lambda:build "npm i && npm run update"
+
+NOTE: this *should* work, but I have had issues with it. _WIP_
 
 ## Acknowledgements
 
