@@ -47,14 +47,32 @@ export const getObject = (params, head, cb) => {
 export const runImageMin = (params, head, obj, cb) => {
   // console.log('Optimizing!');
   // console.log(obj.Body);
+  const fileType = params.Key.split('.').pop();
+  const plugins = [];
+  console.log(`File type: ${fileType}`);
+  switch (fileType) {
+    case 'gif':
+      plugins.push(imageminGifsicle());
+      break;
+    case 'jpeg':
+    case 'jpg':
+      plugins.push(imageminMozjpeg());
+      break;
+    case 'png':
+      plugins.push(imageminPngquant());
+      break;
+    case 'svg':
+      plugins.push(imageminSvgo());
+      break;
+    case 'webp':
+      plugins.push(imageminWebp());
+      break;
+    default:
+      console.log('Incompatible file type. Skipping.');
+      return (cb('skip'));
+  }
   imagemin.buffer(obj.Body, {
-    plugins: [
-      imageminGifsicle(),
-      imageminMozjpeg(),
-      imageminPngquant({ quality: '65-80' }),
-      imageminSvgo({ plugins: [{ removeViewBox: false }] }),
-      imageminWebp({ quality: 50 }),
-    ],
+    plugins,
   }).then(buf => {
     // console.log(buf);
     // console.log('Optimized! Final file size is ' + buf.length + ' bytes');
