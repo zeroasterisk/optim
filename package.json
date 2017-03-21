@@ -47,7 +47,7 @@
     "babel-polyfill": "^6.23.0",
     "imagemin": "^5.2.2",
     "imagemin-gifsicle": "^5.1.0",
-    "imagemin-mozjpeg": "^6.0.0",
+    "imagemin-guetzli": "^0.1.5",
     "imagemin-optipng": "^5.2.1",
     "imagemin-pngquant": "^5.0.0",
     "imagemin-svgo": "^5.2.0",

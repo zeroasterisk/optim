@@ -2,7 +2,7 @@ import AWS from 'aws-sdk';
 import imagemin from 'imagemin';
 import optipng from 'imagemin-optipng';
 import imageminGifsicle from 'imagemin-gifsicle';
-import imageminMozjpeg from 'imagemin-mozjpeg';
+import imageminGuetzli from 'imagemin-guetzli'
 import imageminPngquant from 'imagemin-pngquant';
 import imageminSvgo from 'imagemin-svgo';
 import imageminWebp from 'imagemin-webp';
@@ -56,7 +56,7 @@ export const runImageMin = (params, head, obj, cb) => {
       break;
     case 'jpeg':
     case 'jpg':
-      plugins.push(imageminMozjpeg());
+      plugins.push(imageminGuetzli());
       break;
     case 'png':
       plugins.push(imageminPngquant());
