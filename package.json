@@ -33,7 +33,8 @@
   "author": "Alan Blount <alan@zeroasterisk.com>",
   "scripts": {
     "transpile": "babel --presets es2015 src --out-dir bin",
-    "create": "npm run transpile && claudia create --no-optional-dependencies",
+    "extract-imagemagick": "tar -xzvf imagemagick-webp-lambda.tar.gz",
+    "create": "npm run extract-imagemagick && npm run transpile && claudia create --no-optional-dependencies",
     "update": "npm run transpile && claudia update --no-optional-dependencies",
     "release": "claudia set-version --version production",
     "test-lambda": "npm run transpile && claudia test-lambda --event ./test/event.json",
