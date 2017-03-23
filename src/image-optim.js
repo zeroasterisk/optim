@@ -3,6 +3,7 @@ import imagemin from 'imagemin';
 import optipng from 'imagemin-optipng';
 import imageminGifsicle from 'imagemin-gifsicle';
 import imageminGuetzli from 'imagemin-guetzli'
+import imageminMozjpeg from 'imagemin-mozjpeg'
 import imageminPngquant from 'imagemin-pngquant';
 import imageminSvgo from 'imagemin-svgo';
 import imageminWebp from 'imagemin-webp';
@@ -90,6 +91,7 @@ export const runImageMin = (params, head, obj, buffer, cb) => {
     case 'jpeg':
     case 'jpg':
       plugins.push(imageminGuetzli());
+      plugins.push(imageminMozjpeg({quality: '95'}));
       break;
     case 'png':
       plugins.push(imageminPngquant());
