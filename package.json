@@ -52,7 +52,6 @@
     "imagemin-gifsicle": "^5.1.0",
     "imagemin-guetzli": "^0.1.5",
     "imagemin-mozjpeg": "^6.0.0",
-    "imagemin-optipng": "^5.2.1",
     "imagemin-pngquant": "^5.0.0",
     "imagemin-svgo": "^5.2.0",
     "imagemin-webp": "^4.0.0"
@@ -68,6 +67,11 @@
     "babel-preset-stage-0": "^6.22.0",
     "babel-register": "^6.24.0",
     "claudia": "^2.9.0",
+    "eslint": "^3.18.0",
+    "eslint-config-airbnb": "^14.1.0",
+    "eslint-plugin-import": "^2.2.0",
+    "eslint-plugin-jsx-a11y": "^4.0.0",
+    "eslint-plugin-react": "^6.10.3",
     "nyc": "^10.1.2"
   },
   "optionalDependencies": {

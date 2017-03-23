@@ -1,9 +1,8 @@
 import AWS from 'aws-sdk';
 import imagemin from 'imagemin';
-import optipng from 'imagemin-optipng';
 import imageminGifsicle from 'imagemin-gifsicle';
-import imageminGuetzli from 'imagemin-guetzli'
-import imageminMozjpeg from 'imagemin-mozjpeg'
+import imageminGuetzli from 'imagemin-guetzli';
+import imageminMozjpeg from 'imagemin-mozjpeg';
 import imageminPngquant from 'imagemin-pngquant';
 import imageminSvgo from 'imagemin-svgo';
 import imageminWebp from 'imagemin-webp';
@@ -15,10 +14,7 @@ const s3 = new AWS.S3();
 const im = gm.subClass({ imageMagick: true });
 
 const acl = process.env.UPLOAD_ACL || 'public-read';
-const uploadBucket = process.env.UPLOAD_BUCKET;
-const pngLevel = +process.env.PNG_OPTIM_LEVEL || 7;
 const skipSize = +process.env.MAX_FILE_SIZE || -1;
-
 
 export const getHeadAndMaybeSkip = (params, cb) => {
   s3.headObject(params, (err, head) => {
@@ -77,21 +73,19 @@ export const correctFileType = (params, head, obj, cb) => {
     console.log('Error correcting file type. Skipping.');
     return (cb('skip'));
   }
-}
+};
 export const runImageMin = (params, head, obj, buffer, cb) => {
-  // console.log('Optimizing!');
-  // console.log(obj.Body);
-  const fileType = params.Key.split('.').pop();
+  const fileTypeExt = params.Key.split('.').pop();
   const plugins = [];
-  console.log(`File type: ${fileType}`);
-  switch (fileType) {
+  console.log(`File type: ${fileTypeExt}`);
+  switch (fileTypeExt) {
     case 'gif':
       plugins.push(imageminGifsicle());
       break;
     case 'jpeg':
     case 'jpg':
       plugins.push(imageminGuetzli());
-      plugins.push(imageminMozjpeg({quality: '95'}));
+      plugins.push(imageminMozjpeg({ quality: '95' }));
       break;
     case 'png':
       plugins.push(imageminPngquant());
@@ -108,11 +102,9 @@ export const runImageMin = (params, head, obj, buffer, cb) => {
   }
   imagemin.buffer(buffer, {
     plugins,
-  }).then(buf => {
-    // console.log(buf);
-    // console.log('Optimized! Final file size is ' + buf.length + ' bytes');
+  }).then((buf) => {
     cb(null, params, head, obj, buf);
-  }).catch(err => {
+  }).catch((err) => {
     console.log('imagemin error thrown!');
     console.log(err.message || err.reason || '?');
     return cb(err);
@@ -134,7 +126,7 @@ export const uploadMinifiedFile = (params, head, obj, buf, cb) => {
     Body: buf,
     ContentType: obj.ContentType,
     Metadata: head.Metadata,
-  }, err => {
+  }, (err) => {
     if (err) return cb(err);
     return cb(null, { sizeInit, sizeEnd, sizeTrimmedPercent });
   });
@@ -150,7 +142,7 @@ const doOptimizeFile = (s3file, callback) => {
   }
   const params = { Bucket: bucket, Key: key };
   Async.waterfall([
-    (cb) => (cb(null, params)),
+    cb => (cb(null, params)),
     getHeadAndMaybeSkip,
     getObject,
     correctFileType,
