@@ -3,6 +3,9 @@ import querystring from 'querystring';
 import 'babel-polyfill';
 import doOptimizeFile from './image-optim';
 
+process.env['PATH'] = process.env['LAMBDA_TASK_ROOT'] + '/bin/imagemagick/bin' + ":" + process.env['PATH'];
+process.env['LD_LIBRARY_PATH'] = process.env['LD_LIBRARY_PATH'] + ":" + process.env['LAMBDA_TASK_ROOT'] + '/bin/imagemagick/lib';
+
 const cleanKey = key => querystring.parse(`a=${key}`).a;
 
 const handler = (event, context, callback) => {
@@ -16,7 +19,7 @@ const handler = (event, context, callback) => {
   })).filter(node => /\.(jpe?g|png|gif|svg|webp)$/.test(node.key));
 
   if (!(s3files && s3files.length)) {
-    const err = new Error('No a supported image types - send in valid inputs', event);
+    const err = new Error('No supported image types - send in valid inputs', event);
     return callback(err);
   }
 

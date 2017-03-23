@@ -7,9 +7,11 @@ import imageminPngquant from 'imagemin-pngquant';
 import imageminSvgo from 'imagemin-svgo';
 import imageminWebp from 'imagemin-webp';
 import Async from 'async';
-
+import fileType from 'file-type';
+import gm from 'gm';
 
 const s3 = new AWS.S3();
+const im = gm.subClass({ imageMagick: true });
 
 const acl = process.env.UPLOAD_ACL || 'public-read';
 const uploadBucket = process.env.UPLOAD_BUCKET;
@@ -44,7 +46,38 @@ export const getObject = (params, head, cb) => {
     return cb(null, params, head, data);
   });
 };
-export const runImageMin = (params, head, obj, cb) => {
+export const correctFileType = (params, head, obj, cb) => {
+  try {
+    let hasCalledBack = false;
+    const fileTypeFromKey = params.Key.split('.').pop();
+    const fileTypeFromMagicNumber = fileType(obj.Body);
+    console.log(`file: ${params.Key}`);
+    console.log(`fileTypeFromKey: ${fileTypeFromKey}`);
+    console.log(`fileTypeFromMagicNumber: ${fileTypeFromMagicNumber.ext}`);
+    // convert image: actual file type and file extension from key don't match
+    if (fileTypeFromKey !== fileTypeFromMagicNumber.ext) {
+      hasCalledBack = true;
+      console.log(`Converting file type ${fileTypeFromMagicNumber.ext} to ${fileTypeFromKey}`);
+      im(obj.Body).toBuffer(fileTypeFromKey, (err, buffer) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(`File type in IM buffer: ${JSON.stringify(fileType(buffer))}`);
+          head.Metadata.originalFileType = fileTypeFromMagicNumber.ext;
+          return cb(null, params, head, obj, buffer);
+        }
+      });
+    }
+    if (!hasCalledBack) {
+      return cb(null, params, head, obj, obj.Body);
+    }
+  } catch (e) {
+    console.log(`correctFileType Error: ${e}`);
+    console.log('Error correcting file type. Skipping.');
+    return (cb('skip'));
+  }
+}
+export const runImageMin = (params, head, obj, buffer, cb) => {
   // console.log('Optimizing!');
   // console.log(obj.Body);
   const fileType = params.Key.split('.').pop();
@@ -71,7 +104,7 @@ export const runImageMin = (params, head, obj, cb) => {
       console.log('Incompatible file type. Skipping.');
       return (cb('skip'));
   }
-  imagemin.buffer(obj.Body, {
+  imagemin.buffer(buffer, {
     plugins,
   }).then(buf => {
     // console.log(buf);
@@ -118,6 +151,7 @@ const doOptimizeFile = (s3file, callback) => {
     (cb) => (cb(null, params)),
     getHeadAndMaybeSkip,
     getObject,
+    correctFileType,
     runImageMin,
     uploadMinifiedFile,
   ], (err, out) => {
