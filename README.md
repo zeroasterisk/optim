@@ -15,33 +15,36 @@ Currently supported:
 
 ## Setup
 
- * Clone this repo
+Clone this repo:
 
- * Run `npm install`
+    git clone https://github.com/zeroasterisk/optim.git
 
- * Fill in `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` in `.env` to a set of credentials that can create Lambda functions (alternatively have these already in your environment)
+Install Node packages:
 
- * Create an IAM role for Optim to use. It needs the following permissions on all the S3 buckets you want to use (allowing these operations on ARN `*` is easiest to start with):
+    npm install
+
+Configure AWS credientials if they are not already set in your environment:
+
+    aws configure
+
+Create an IAM role for Optim to use. It needs the following permissions on all the S3 buckets you want to use (allowing these operations on ARN `*` is easiest to start with):
    * `getObject`
    * `putObject`
    * `putObjectAcl`
 
-
- * Find the ARN for this role. It looks something like `arn:aws:iam::1234567890:role/rolename`.
-
- * Fill in `AWS_ROLE_ARN` in `.env`
-
- * Run `npm run deploy`
-
- * Hurrah, your Lambda function is now deployed! It'll be created with the name `optim-production` unless you changed values in `.env`
-
- * You can now hook this function up to any S3 bucket you like in the management console. Easiest way is to follow [AWS's guide][s3-evt-setup]
-
-## Configuration
+Find the ARN for this role. It looks something like `arn:aws:iam::111111111111:role/YOURROLEHERE`.
 
 Create with claudia for the first time:
 
     npm run create --role arn:aws:iam::111111111111:role/YOURROLEHERE --region us-east-1 --memory 1536 --timeout 300 --version development --handler bin.default --name image-optim
+
+You can now hook this function up to any S3 bucket you like in the management console. Easiest way is to follow [AWS's guide][s3-evt-setup]
+
+## Scripts
+
+Extract ImageMagick:
+
+    npm run extract-imagemagick
 
 Update with claudia:
 
